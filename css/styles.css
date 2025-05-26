@@ -1,0 +1,166 @@
+:root {
+    --fontFamily: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.header-index {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9;
+}
+
+.main-index {
+    padding-top: 7.5rem;
+}
+
+#productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.container-product {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 0.7s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.producto {
+    margin: 0 auto;
+}
+
+.container-product {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background-color: #fff;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.product-img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  margin-bottom: 40px;
+  transition: transform 0.4s ease-in-out;
+  transform-origin: center;
+}
+
+.product-img:hover {
+  transform: scale(1.2);
+}
+
+.flex-grow {
+    flex-grow: 1;
+    margin-bottom: -20px;
+}
+
+.tagName > p {
+    font-family: var(--fontFamily);
+    font-weight: 400;
+    margin: 0;
+    margin-top: 5px;
+}
+
+.precio > span {
+    font-weight: 500;
+    font-size: 1.2rem;
+    font-family: var(--fontFamily);
+}
+
+/* LOGIN */
+.btn-google {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-google:hover {
+  background-color: #dc2626;
+}
+
+/* Spinner overlay */
+#spinner-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* Spinner loader */
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #ef4444;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* STYLE Toast */
+.toast {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  min-width: 250px;
+  max-width: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+  animation: fadeInDown 0.3s ease;
+  position: relative;
+  color: white;
+}
+
+.toast .icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.toast .close-btn {
+  margin-left: auto;
+  cursor: pointer;
+  font-weight: bold;
+  padding-left: 10px;
+}
+
+.toast.success { background-color: #05411b; }  /* verde */
+.toast.error { background-color: #dc2626; }    /* rojo */
+.toast.info { background-color: #2563eb; }     /* azul */
+.toast.warning { background-color: #f59e0b; }  /* naranja */
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease-out;
+}

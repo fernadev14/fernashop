@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard admin</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/modal.css" />
+    <link rel="stylesheet" href="./css/buttons.css">
+
+    <!-- TAILWINDCSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">@theme {--color-clifford: #da373d;}
+    </style>
+</head>
+
+<body>
+    <!-- Layout grid global -->
+    <div class="min-h-screen bg-gray-100 grid md:grid-cols-[300px_1fr]">
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="bg-blue-600 text-white p-4 hidden md:block fixed md:static w-70 md:w-auto h-full z-50">
+            <nav id="navAdmin" class="flex flex-col h-full fixed justify-between">
+                <div id="tiendaContainer">
+                    <h1 class="text-2xl font-bold mb-6 text-center">FernaShop Admin</h1>
+                    <div id="admin-welcome" class="mb-4 flex-row-reverse"></div>
+                    <button id="btnTienda"
+                        class="px-4 py-2 bg-neutral-800 text-white rounded hover:bg-slate-800 text-sm w-full cursor-pointer hidden">
+                        Ir a la tienda
+                    </button>
+                </div>
+                <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded mb-10 cursor-pointer">
+                    Cerrar sesión
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="md:ml-0 ml-0 p-4 md:p-6 w-full">
+            <!-- Botón hamburguesa solo en móvil -->
+            <div class="flex justify-between md:hidden items-start flex-row-reverse">
+                <button id="toggleSidebar" class="text-blue-600 text-2xl focus:outline-none flex-none">
+                    ☰
+                </button>
+                <div class="md:hidden flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold">Dashboard</h2>
+                </div>
+            </div>
+
+            <!-- CONTENIDO -->
+            <section id="form-agregar-producto" class="w-full bg-white p-4 rounded shadow mb-6">
+                <h2 class="text-xl font-semibold mb-2">Agregar producto</h2>
+                <!-- tu formulario aquí -->
+                <form id="agregar-producto-form" data-editando="1234" class="space-y-3">
+                    <input type="text" id="nombre" placeholder="Nombre" class="w-full border p-2 rounded" required />
+                    <input type="text" id="precio" placeholder="Precio" class="w-full border p-2 rounded" required />
+                    <input type="text" id="imagen" placeholder="Imagen URL" class="w-full border p-2 rounded"
+                        required />
+                    <input type="text" id="talla" placeholder="Talla" class="w-full border p-2 rounded" required />
+                    <select id="genero" class="w-full border p-2 rounded" required>
+                        <option value="" disabled selected>Sección</option>
+                        <option value="hombre">Hombre</option>
+                        <option value="mujer">Mujer</option>
+                        <option value="tenis">Tenis</option>
+                    </select>
+                    <button type="submit" id="btn-submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded">Agregar</button>
+                </form>
+            </section>
+
+            <section class="mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <input type="text" id="input-buscar" placeholder="Buscar producto"
+                        class="border p-2 rounded w-full max-w-xs">
+                    <p id="contador-productos" class="text-gray-600 ml-4">Total: 0 productos</p>
+                </div>
+                <ul id="lista-productos" class="grid gap-4"></ul>
+            </section>
+        </main>
+    </div>
+
+
+    <!-- Modal de Edición -->
+    <div id="modal-editar" class="hidden fixed inset-0 bg-[rgba(0,0,0,0.85)] flex justify-center items-center z-50">
+        <div class="bg-white rounded-lg p-6 shadow max-w-md w-full relative">
+            <h2 class="text-xl font-semibold mb-4">Editar Producto</h2>
+            <form id="form-editar-producto" class="space-y-3">
+                <input type="text" id="inputEditNombre" placeholder="Nombre" class="w-full border p-2 rounded"
+                    required />
+                <input type="text" id="inputEditPrecio" placeholder="Precio" class="w-full border p-2 rounded"
+                    required />
+                <input type="text" id="inputEditImagen" placeholder="Imagen URL" class="w-full border p-2 rounded"
+                    required />
+                <input type="text" id="inputEditTalla" placeholder="Talla" class="w-full border p-2 rounded" required />
+                <select id="inputEditGenero" class="w-full border p-2 rounded" required>
+                    <option value="hombre">Hombre</option>
+                    <option value="mujer">Mujer</option>
+                    <option value="tenis">Tenis</option>
+                </select>
+                <div class="flex justify-end gap-2">
+                    <button type="button" id="btn-cancelar-edicion"
+                        class="px-4 py-2 bg-gray-300 rounded cursor-pointer">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded cursor-pointer">Guardar
+                        cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="module" src="./auth/admin.js"></script>
+</body>
+
+</html>
