@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Evento para agregar al carrito producto
 document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.button');
+    const btn = e.target.closest('.btn-add-cart');
     if (btn) {
         e.preventDefault(); // Previene el submit si está en un form
         const id = btn.dataset.id;

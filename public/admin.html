@@ -60,18 +60,25 @@
                     <input type="text" id="imagen" placeholder="Imagen URL*" class="w-full border p-2 rounded"
                         required />
                     <input type="text" id="talla" placeholder="Talla*" class="w-full border p-2 rounded" required />
-                    <input type="number" id="stock" placeholder="Stock*" class="w-full border p-2 rounded" min="0"
-                        required />
-                    <input type="text" id="description" placeholder="Descripción producto*"
-                        class="w-full border p-2 rounded" required />
+                    <input type="number" id="stock" name="stock" placeholder="Stock*" class="w-full border p-2 rounded"
+                        min="0" required />
+                    <input type="text" id="description" name="description" placeholder="Descripción producto"
+                        class="w-full border p-2 rounded" />
                     <select id="genero" class="w-full border p-2 rounded" required>
                         <option value="" disabled selected>Sección</option>
                         <option value="hombre">Hombre</option>
                         <option value="mujer">Mujer</option>
                         <option value="tenis">Tenis</option>
                     </select>
-                    <button type="submit" id="btn-submit"
-                        class="bg-blue-600 text-white px-4 py-2 cursor-pointer rounded">Agregar</button>
+                    <button type="submit" id="btn-submit" class="btn-add-prod">
+                        <span class="button__text">Add item</span>
+                        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+                                stroke="currentColor" height="24" fill="none" class="svg">
+                                <line y2="19" y1="5" x2="12" x1="12"></line>
+                                <line y2="12" y1="12" x2="19" x1="5"></line>
+                            </svg></span>
+                    </button>
                 </form>
 
                 <!-- Formulario agregar productos CSV -->
@@ -93,8 +100,18 @@
                         </label>
                     </div>
 
-                    <button type="submit"
-                        class="bg-green-600 text-white px-4 py-2 cursor-pointer rounded">Importar</button>
+                    <button type="submit" class="btn-add-prod" id="btn-import-csv">
+                        <span class="button__text">Importar</span>
+                        <span class="button__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2"
+                                stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24"
+                                fill="none" class="svg">
+                                <polyline points="8 17 12 21 16 17"></polyline>
+                                <line x1="12" y1="12" x2="12" y2="21"></line>
+                                <rect x="4" y="4" width="16" height="4" rx="2"></rect>
+                            </svg>
+                        </span>
+                    </button>
                 </form>
             </section>
 
@@ -124,8 +141,8 @@
                 <input type="text" id="inputEditTalla" placeholder="Talla" class="w-full border p-2 rounded" required />
                 <input type="number" id="inputEditStock" placeholder="Stock*" class="w-full border p-2 rounded" min="0"
                     required />
-                <input type="text" id="inputEditDescripcion" placeholder="Descripción*"
-                    class="w-full border p-2 rounded" required />
+                <input type="text" id="inputEditDescripcion" placeholder="Descripción"
+                    class="w-full border p-2 rounded" />
                 <select id="inputEditGenero" class="w-full border p-2 rounded" required>
                     <option value="hombre">Hombre</option>
                     <option value="mujer">Mujer</option>

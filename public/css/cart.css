@@ -1,0 +1,47 @@
+.btn-add-cart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 15px;
+  background-color: #181717;
+  outline: 3px #181717 solid;
+  outline-offset: -3px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 400ms;
+  opacity: 0;
+  transform: translateY(10px);
+  visibility: hidden;
+  transition: all 0.4s ease;
+}
+
+.container-product:hover .btn-add-cart {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.btn-add-cart .text {
+  color: white;
+  font-weight: 700;
+  font-size: 1em;
+  transition: 400ms;
+}
+
+.btn-add-cart svg path {
+  transition: 400ms;
+}
+
+.btn-add-cart:hover {
+  background-color: transparent;
+}
+
+.btn-add-cart:hover .text {
+  color: #181717;
+}
+
+.btn-add-cart:hover svg path {
+  fill: #181717;
+}

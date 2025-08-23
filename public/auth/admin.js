@@ -116,13 +116,18 @@ async function validarDuplicado(nombre, imagen) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // console.log(form);
+  // console.log(form.description);
+
   const nombre = form.nombre.value.trim();
   const precio = parseFloat(form.precio.value);
   const imagen = form.imagen.value.trim();
   const genero = form.genero.value;
   const talla = form.talla.value;
+  const stock = parseInt(form.stock.value, 10);
+  const descripcion = form.description.value.trim();
 
-  if (!nombre || !precio || !imagen || !genero || !talla) {
+  if (!nombre || isNaN(precio) || precio <= 0 || !imagen || !genero || !talla || isNaN(stock) || stock < 0) {
     alert("Todos los campos son obligatorios");
     return;
   }
@@ -190,6 +195,10 @@ document.getElementById('form-importar-productos').addEventListener('submit', as
 
         for (const row of rows) {
             const parts = row.includes(';') ? row.split(';') : row.split(',');
+
+            // Verificar si todos los campos estan vacios
+            if (parts.every(field => !field.trim())) continue;
+            
             const [nombre, precio, imagen, talla, stock, genero, descripcion] = parts;
             if (nombre && precio && imagen && talla && stock && genero && descripcion) {
               const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(nombre, imagen);
