@@ -20,6 +20,8 @@ export function renderProductosAdmin(productos, containerSelector) {
         <p class="text-sm text-gray-600">Categoría: ${p.genero}</p>
         <p class="text-sm text-gray-600">Talla: ${p.talla}</p>
         <p class="text-sm text-gray-800">$${p.precio}</p>
+        <p class="text-sm text-gray-800">Stock:${p.stock}</p>
+        <p class="text-sm text-gray-800">Descripción: ${p.descripcion}</p>
       </div>
       </div>
       <div>

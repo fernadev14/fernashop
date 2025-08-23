@@ -41,6 +41,8 @@ const adminUID = "b2ofpkg90oZZVkpdhLe4Om2IvQC3";
 // Elementos del DOM  y modal de edición
 const modalEditar = document.getElementById("modal-editar");
 const formEditar = document.getElementById("form-editar-producto");
+const inputEditStock = document.getElementById("inputEditStock");
+const inputEditDescripcion = document.getElementById("inputEditDescripcion");
 const cancelarBtn = document.getElementById("btn-cancelar-edicion");
 const welcomeText = document.getElementById("admin-welcome");
 const logoutBtn = document.getElementById("logout-btn");
@@ -48,8 +50,6 @@ const form = document.getElementById("agregar-producto-form");
 const lista = document.getElementById("lista-productos");
 const inputBuscar = document.getElementById("input-buscar");
 const contadorProductos = document.getElementById("contador-productos");
-// const sidebar = document.getElementById('sidebar');
-// const togleSidebar = document.getElementById('toggleSidebar');
 const fileInput = document.getElementById('archivo-productos');
 const nombreArchivo = document.getElementById('nombre-archivo');
 
@@ -188,8 +188,8 @@ document.getElementById('form-importar-productos').addEventListener('submit', as
 
         for (const row of rows) {
             const parts = row.includes(';') ? row.split(';') : row.split(',');
-            const [nombre, precio, imagen, talla, genero] = parts;
-            if (nombre && precio && imagen && talla && genero) {
+            const [nombre, precio, imagen, talla, stock, genero, descripcion] = parts;
+            if (nombre && precio && imagen && talla && stock && genero && descripcion) {
               const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(nombre, imagen);
                 if (duplicadoNombre) {
                     duplicadosNombre++;
@@ -200,7 +200,7 @@ document.getElementById('form-importar-productos').addEventListener('submit', as
                     continue;
                 }
                 try {
-                    await agregarProducto({ nombre, precio, imagen, talla, genero });
+                    await agregarProducto({ nombre, precio, imagen, talla, stock, genero, descripcion });
                     exitos++;
                 } catch (err) {
                     fallos++;
@@ -240,7 +240,7 @@ fileInput.addEventListener('change', function () {
 // ===========================
 // CARGAR PRODUCTOS CSV
 // ===========================
-async function agregarProducto({ nombre, precio, imagen, talla, genero }) {
+async function agregarProducto({ nombre, precio, imagen, talla, genero, stock, descripcion}) {
   try {
     await addDoc(collection(db, "productos"), {
       producto: nombre.trim(),
@@ -248,8 +248,8 @@ async function agregarProducto({ nombre, precio, imagen, talla, genero }) {
       imagen: imagen.trim(),
       genero: genero.trim(),
       talla: talla.trim(),
-      stock: 0,
-      descripcion: ""
+      stock: parseInt(stock, 10),
+      descripcion: descripcion.trim()
     });
   } catch (err) {
     console.error("Error al agregar producto desde CSV:", err);
@@ -318,6 +318,8 @@ lista.addEventListener("click", async (e) => {
         inputEditImagen.value = data.imagen;
         inputEditGenero.value = data.genero;
         inputEditTalla.value = data.talla;
+        inputEditStock.value = data.stock ?? 0;
+        inputEditDescripcion.value = data.descripcion ?? "";
 
         //Guardamos el ID del boton
         productoEditandoId = id;
@@ -361,7 +363,9 @@ formEditar.addEventListener("submit", async (e) => {
       precio: parseFloat(inputEditPrecio.value),
       imagen: inputEditImagen.value.trim(),
       genero: inputEditGenero.value,
-      talla: inputEditTalla.value.trim()
+      talla: inputEditTalla.value.trim(),
+      stock: parseInt(inputEditStock.value, 10),
+      descripcion: inputEditDescripcion.value.trim()
     });
 
     alert("Producto actualizado correctamente.");
