@@ -6,15 +6,23 @@ import { observarEstadoAuth } from './utils/authhState.js';
 import { renderFooter } from './components/footer.js';
 import { renderProductos } from './components/renderProductos.js';
 import { agregarAlCarrito, manejarEventosCarrito, abrirCarrito, countadorCarritoIcon, renderCarrito } from './components/cart.js';
-// import PRODUCTOS from './productsArray.js';
 
-let productosFirestore = [];
+export let productosFirestore = [];
 
 
 console.log(obtenerProductosFirestore())
 
 document.addEventListener('DOMContentLoaded', async () => {
     productosFirestore = await obtenerProductosFirestore();
+
+    const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
+    carritoGuardado.forEach(itemCarrito => {
+        const producto = productosFirestore.find(p => p.id === itemCarrito.id);
+        if (producto) {
+            producto.stock = Math.max(0, producto.stock - itemCarrito.cantidad);
+        }
+    });
+
     renderProductos(productosFirestore, '#productos');
     // console.log(productosFirestore)
 
@@ -63,15 +71,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Evento para agregar al carrito producto
 document.addEventListener('click', (e) => {
-    if (e.target.closest('.button')) {
-      const id = e.target.closest('button').dataset.id;
-      const producto = productosFirestore.find(p => p.id === id);
-      if(producto){
-          agregarAlCarrito(producto);
-          console.log(producto)
-      }else {
-        console.warn("producto no encontrado para ID: ", id);
-      }
+    const btn = e.target.closest('.button');
+    if (btn) {
+        e.preventDefault(); // Previene el submit si está en un form
+        const id = btn.dataset.id;
+        const producto = productosFirestore.find(p => p.id === id);
+        if(producto){
+            agregarAlCarrito(producto); // Agrega al carrito
+            if (producto.stock > 0) {
+                producto.stock -= 1;
+                renderProductos(productosFirestore, '#productos');
+            }
+        } else {
+            console.warn("producto no encontrado para ID: ", id);
+        }
     }
     const cartBtn = document.getElementById('cart-btn');
     cartBtn?.addEventListener('click', abrirCarrito);

@@ -27,17 +27,17 @@ export function observarEstadoAuth() {
       // Redirigir si es admin
       const isAdmin = user.uid === ADMIN_UID;
 
-      if (isAdmin) {
+      if (isAdmin && tiendaBtn) {
       // Mostrar botón de tienda
-      if (tiendaBtn.classList.contains('hidden')) {
-        tiendaBtn.classList.remove("hidden");
-      
-        // Evento para redirigir a tienda
-        tiendaBtn.addEventListener("click", () => {
-          window.open("/index.html", "_blank");
-        });
+        if (tiendaBtn.classList.contains('hidden')) {
+          tiendaBtn.classList.remove("hidden");
+        
+          // Evento para redirigir a tienda
+          tiendaBtn.addEventListener("click", () => {
+            window.open("/index.html", "_blank");
+          });
+        }
       }
-}
 
       // Logout handler
       logoutBtn?.addEventListener("click", () => {

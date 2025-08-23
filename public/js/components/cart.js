@@ -1,21 +1,33 @@
 import { mostrarToast, animarIconoCarrito } from '../utils/notificaciones.js';
+import { renderProductos } from './renderProductos.js';
+import { productosFirestore } from '../index.js';
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
 export function agregarAlCarrito(producto) {
   const existente = carrito.find(p => p.id === producto.id);
   if (existente) {
-    existente.cantidad++;
+    if (existente.cantidad < existente.stock) {
+      existente.cantidad++;
   } else {
-    carrito.push({ ...producto, cantidad: 1 });
-    console.log(carrito)
+    mostrarToast('No hay más stock disponible para este producto', 'error');
+      return;
   }
   
   if (typeof carrito === 'undefined') {
     console.warn("Variable 'carrito' no está definida.");
     return;
   }
-  
+ 
+  } else {
+    if (producto.stock > 0) {
+      carrito.push({ ...producto, cantidad: 1 });
+    } else {
+      mostrarToast('Producto sin stock', 'error');
+      return;
+    }
+  }
+
   mostrarToast('Producto agregado correctamente', 'success');
   animarIconoCarrito();
 
@@ -23,7 +35,6 @@ export function agregarAlCarrito(producto) {
   guardarCarrito();
   renderCarrito();
   countadorCarritoIcon();
-  // abrirCarrito();
 }
 
 
@@ -59,6 +70,10 @@ export function renderCarrito() {
   container.innerHTML = '';
 
   carrito.forEach(item => {
+    // Busca el stock real en productosFirestore
+    const productoActual = productosFirestore.find(p => p.id === item.id);
+    const stockDisponible = productoActual ? productoActual.stock : item.stock;
+
     const itemDiv = document.createElement('div');
     itemDiv.className = "flex justify-between items-center border p-2 rounded";
 
@@ -77,7 +92,10 @@ export function renderCarrito() {
         <div class="flex items-center gap-2">
           <button class="decrement text-lg px-2 border rounded" data-id="${item.id}">−</button>
           <span>${item.cantidad}</span>
-          <button class="increment text-lg px-2 border rounded" data-id="${item.id}">+</button>
+          <button class="increment text-lg px-2 border rounded" data-id="${item.id}" ${item.cantidad >= item.stock ? 'disabled style="background:#ccc;cursor:not-allowed;"' : ''}>+</button>
+          <span class="text-xs ml-2 ${stockDisponible <= 0 ? 'text-red-500' : 'text-gray-400'}">
+            ${stockDisponible <= 0 ? 'Agotado' : `Stock: ${stockDisponible}`}
+          </span>
         </div>
         <button class="eliminar-item mt-2 text-sm text-red-600 underline cursor-pointer" data-id="${item.id}">Eliminar</button>
       </div>
@@ -113,20 +131,44 @@ function actualizarTotal() {
 export function manejarEventosCarrito() {
   document.addEventListener('click', (e) => {
     const id = e.target.dataset.id;
-
+    
+    // Incrementar cantidad
     if (e.target.classList.contains('increment')) {
       const item = carrito.find(p => p.id === id);
-      if (item) item.cantidad++;
+      if (item) {
+        if (item.cantidad < item.stock) {
+          item.cantidad++;
+          // ↓↓↓ RESTA 1 al stock visual del producto
+          const prod = productosFirestore.find(p => p.id === id);
+          if (prod && prod.stock > 0) {
+            prod.stock -= 1;
+            renderProductos(productosFirestore, '#productos');
+          }
+          guardarCarrito();
+          renderCarrito();
+          countadorCarritoIcon();
+        } else {
+          mostrarToast('No hay más stock disponible para este producto', 'error');
+        }
+      } 
+        
       guardarCarrito();
       renderCarrito();
       countadorCarritoIcon()
     }
     
+    // Decrementar cantidad
     if (e.target.classList.contains('decrement')) {
-      const id = e.target.dataset.id;
       const prod = carrito.find(p => p.id == id);
+
       if (prod && prod.cantidad > 1) {
         prod.cantidad--;
+        // ↑↑↑ SUMA 1 al stock visual del producto
+        const producto = productosFirestore.find(p => p.id === id);
+        if (producto) {
+          producto.stock += 1;
+          renderProductos(productosFirestore, '#productos');
+        }
         guardarCarrito();
         renderCarrito();
          countadorCarritoIcon()
@@ -135,6 +177,17 @@ export function manejarEventosCarrito() {
 
     /* ELIMINAR ITEM INDIVIDUAL EN EL CARRITO */
     if (e.target.classList.contains('eliminar-item')) {
+      const prod = carrito.find(p => p.id == id);
+
+      if (prod) {
+        // ↑↑↑ SUMA el stock de vuelta al producto visual
+        const producto = productosFirestore.find(p => p.id === id);
+        if (producto) {
+          producto.stock += prod.cantidad;
+          renderProductos(productosFirestore, '#productos');
+        }
+      }
+
       carrito = carrito.filter(p => p.id != id);
       guardarCarrito();
       renderCarrito();
@@ -142,8 +195,15 @@ export function manejarEventosCarrito() {
     }
 
     /* VACIAR TODO EL CARRITO */
-
     if(e.target.id === 'vaciar-carrito'){
+      // ↑↑↑ SUMA el stock de todos los productos de vuelta
+      carrito.forEach(item => {
+        const producto = productosFirestore.find(p => p.id === item.id);
+        if (producto) {
+          producto.stock += item.cantidad;
+        }
+      });
+      renderProductos(productosFirestore, '#productos');
       carrito = [];
       guardarCarrito();
       renderCarrito();

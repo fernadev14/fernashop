@@ -14,15 +14,18 @@ export function renderProductos(productos, containerSelector) {
             <p class="text-blue-600 font-bold mr-4">$${prod.precio}</p>
             <p class="text-gray-400">Talla: ${prod.talla}</p>
         </div>
+        <div class="mt-2">
+          <p class="text-gray-400">En stock: ${prod.stock > 0 ? prod.stock : '<span class="text-red-500">Agotado</span>'}</p>
+        </div>
         <div class="w-full flex justify-center py-4"></div>
       </div>
 
-        <button data-id="${prod.id}" class="button">
+        <button type="button" data-id="${prod.id}" class="button" ${prod.stock <= 0 ? 'disabled style="background:#ccc;cursor:not-allowed;"' : ''}>
             <svg viewBox="0 0 16 16" class="bi bi-cart-check" height="24" width="24" xmlns="http://www.w3.org/2000/svg" fill="#fff">
                 <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"></path>
                 <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
             </svg>
-            <p class="text">Agregar carrito</p>
+            <p class="text">${prod.stock > 0 ? 'Agregar carrito' : 'Sin stock'}</p>
         </button>
     </div>
   `).join('');

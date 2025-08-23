@@ -16,6 +16,7 @@ import {
   where
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/*
 async function actualizarProductosConNuevosCampos() {
   const snapshot = await getDocs(collection(db, "productos"));
   const updates = [];
@@ -32,6 +33,7 @@ async function actualizarProductosConNuevosCampos() {
   await Promise.all(updates);
   alert("Todos los productos han sido actualizados con los nuevos campos.");
 }
+*/
 // Llama esta función UNA SOLA VEZ para agregar mas atributos a la BD FireStore
 // actualizarProductosConNuevosCampos();
 
