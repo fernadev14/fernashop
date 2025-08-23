@@ -11,8 +11,29 @@ import {
   getDoc,
   deleteDoc,
   doc,
-  setDoc
+  setDoc,
+  query, 
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+async function actualizarProductosConNuevosCampos() {
+  const snapshot = await getDocs(collection(db, "productos"));
+  const updates = [];
+  snapshot.forEach(docSnap => {
+    const ref = doc(db, "productos", docSnap.id);
+    // Solo agrega los campos si no existen, o actualiza el valor por defecto
+    updates.push(setDoc(ref, {
+      ...docSnap.data(),
+      stock: docSnap.data().stock ?? 10, // Si ya tiene stock, lo deja igual, si no, pone 10
+      descripcion: docSnap.data().descripcion ?? "",
+      oferta: docSnap.data().oferta ?? false
+    }));
+  });
+  await Promise.all(updates);
+  alert("Todos los productos han sido actualizados con los nuevos campos.");
+}
+// Llama esta función UNA SOLA VEZ para agregar mas atributos a la BD FireStore
+// actualizarProductosConNuevosCampos();
 
 const auth = getAuth(app);
 const adminUID = "b2ofpkg90oZZVkpdhLe4Om2IvQC3";
@@ -27,8 +48,10 @@ const form = document.getElementById("agregar-producto-form");
 const lista = document.getElementById("lista-productos");
 const inputBuscar = document.getElementById("input-buscar");
 const contadorProductos = document.getElementById("contador-productos");
-const sidebar = document.getElementById('sidebar');
-const togleSidebar = document.getElementById('toggleSidebar');
+// const sidebar = document.getElementById('sidebar');
+// const togleSidebar = document.getElementById('toggleSidebar');
+const fileInput = document.getElementById('archivo-productos');
+const nombreArchivo = document.getElementById('nombre-archivo');
 
 // Para edicion y busqueda
 let productosGlobal = [];
@@ -66,6 +89,25 @@ logoutBtn.addEventListener("click", async () => {
   }
 });
 
+
+// ===========================
+// VALIDAR SI EXISTE PRODUCTOS IGUALES
+// ===========================
+async function validarDuplicado(nombre, imagen) {
+    // Busca por nombre
+    const qNombre = query(collection(db, "productos"), where("producto", "==", nombre.trim()));
+    const snapNombre = await getDocs(qNombre);
+
+    // Busca por imagen
+    const qImagen = query(collection(db, "productos"), where("imagen", "==", imagen.trim()));
+    const snapImagen = await getDocs(qImagen);
+
+    return {
+      duplicadoNombre: !snapNombre.empty,
+      duplicadoImagen: !snapImagen.empty
+    };
+  }
+
 // ===========================
 // AGREGAR / EDITAR PRODUCTO
 // ===========================
@@ -80,6 +122,25 @@ form.addEventListener("submit", async (e) => {
 
   if (!nombre || !precio || !imagen || !genero || !talla) {
     alert("Todos los campos son obligatorios");
+    return;
+  }
+
+  const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(nombre, imagen);
+
+  if (duplicadoNombre) {
+    Swal.fire({ 
+      title: "Ya existe un producto con ese nombre.", 
+      icon: "error",
+      draggable: true
+    });
+    return;
+  }
+  if (duplicadoImagen) {
+    Swal.fire({ 
+      title: "Ya existe un producto con esa imagen.", 
+      icon: "error",
+      draggable: true
+     });
     return;
   }
 
@@ -108,6 +169,88 @@ document.getElementById('toggleSidebar')?.addEventListener('click', () => {
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.toggle('hidden');
 });
+
+// ===========================
+// IMPORTAR PRODUCTOS MASIVOS CSV
+// ===========================
+document.getElementById('form-importar-productos').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async function(event) {
+        const text = event.target.result;
+        const rows = text.split('\n').filter(Boolean);
+        let exitos = 0, fallos = 0, duplicadosNombre = 0, duplicadosImagen = 0;
+
+        for (const row of rows) {
+            const parts = row.includes(';') ? row.split(';') : row.split(',');
+            const [nombre, precio, imagen, talla, genero] = parts;
+            if (nombre && precio && imagen && talla && genero) {
+              const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(nombre, imagen);
+                if (duplicadoNombre) {
+                    duplicadosNombre++;
+                    continue;
+                }
+                if (duplicadoImagen) {
+                    duplicadosImagen++;
+                    continue;
+                }
+                try {
+                    await agregarProducto({ nombre, precio, imagen, talla, genero });
+                    exitos++;
+                } catch (err) {
+                    fallos++;
+                }
+            } else {
+                fallos++;
+            }
+        }
+
+        let mensaje = `✅ Importados: ${exitos}\n❌ Fallidos: ${fallos}`;
+        if (duplicadosNombre > 0) mensaje += `\n⚠️ Duplicados por nombre: ${duplicadosNombre}`;
+        if (duplicadosImagen > 0) mensaje += `\n⚠️ Duplicados por imagen: ${duplicadosImagen}`;
+
+        Swal.fire({
+            title: 'Importación finalizada',
+            text: mensaje,
+            icon: exitos ? "success" : "error",
+            draggable: true
+        });
+
+        cargarProductos();
+    };
+    reader.readAsText(file);
+});
+
+// ===========================
+// CAMBIAR NOMBRE AL CARGAR EL ARCHIVO EN EL INPUT PARA IMPORTAR LOS PRODUCTOS
+// ===========================
+fileInput.addEventListener('change', function () {
+    if (fileInput.files.length > 0) {
+        nombreArchivo.lastChild.textContent = fileInput.files[0].name;
+    } else {
+        nombreArchivo.lastChild.textContent = 'Elige un archivo';
+    }
+});
+
+// ===========================
+// CARGAR PRODUCTOS CSV
+// ===========================
+async function agregarProducto({ nombre, precio, imagen, talla, genero }) {
+  try {
+    await addDoc(collection(db, "productos"), {
+      producto: nombre.trim(),
+      precio: parseFloat(precio),
+      imagen: imagen.trim(),
+      genero: genero.trim(),
+      talla: talla.trim()
+    });
+  } catch (err) {
+    console.error("Error al agregar producto desde CSV:", err);
+  }
+}
 
 
 // ===========================
