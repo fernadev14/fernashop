@@ -150,7 +150,9 @@ form.addEventListener("submit", async (e) => {
       precio,
       imagen,
       genero,
-      talla
+      talla,
+      stock,
+      descripcion
     });
     alert("Producto agregado");
     form.reset();
@@ -245,7 +247,9 @@ async function agregarProducto({ nombre, precio, imagen, talla, genero }) {
       precio: parseFloat(precio),
       imagen: imagen.trim(),
       genero: genero.trim(),
-      talla: talla.trim()
+      talla: talla.trim(),
+      stock: 0,
+      descripcion: ""
     });
   } catch (err) {
     console.error("Error al agregar producto desde CSV:", err);
