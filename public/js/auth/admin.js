@@ -211,7 +211,11 @@ previsualizarBtn.addEventListener("click", () => {
         renderizarPreview(datos, document.getElementById("preview-table"));
         modalPreview.classList.remove("hidden");
     } else {
-        alert("No hay datos para previsualizar. Primero selecciona un archivo CSV.");
+      Swal.fire({
+        title: "No hay datos para ver. Selecciona un archivo CSV.",
+        icon: "error",
+        draggable: true
+      });
     }
 });
 

@@ -9,8 +9,8 @@ import {
     query, 
     where 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { db } from "../../utils/firebaseConfig.js"; // Ruta corregida
-import { renderProductosAdmin } from "../../components/renderProductosAdmin.js"; // Ruta corregida
+import { db } from "../../utils/firebaseConfig.js";
+import { renderProductosAdmin } from "../../components/renderProductosAdmin.js";
 
 let productosGlobal = [];
 let contadorProductosElement = null;
