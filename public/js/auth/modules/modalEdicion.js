@@ -55,9 +55,11 @@ export function configurarEventosModal() {
     if (!modalEditar || !formEditar) return;
     
     // Cerrar modal al hacer click fuera
+    /* 
     modalEditar.addEventListener("click", (e) => {
         if (e.target === modalEditar) cerrarModalEditar();
     });
+    */
 
     // Cerrar modal con tecla Escape
     document.addEventListener("keydown", (e) => {
