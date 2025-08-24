@@ -1,3 +1,4 @@
+/*
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { app } from "../js/utils/firebaseConfig.js";
 
@@ -14,7 +15,7 @@ document.getElementById("btn-login-google").addEventListener("click", async () =
    try {
      const result = await signInWithPopup(auth, provider);
      const user = result.user
-     // Redirigir según el rol (puedes expandir esta lógica más adelante)
+     // Redirigir según el rol
      if (user.uid === adminUID) {
        window.location.href = "./admin.html";
      } else {
@@ -27,6 +28,10 @@ document.getElementById("btn-login-google").addEventListener("click", async () =
  });
 */
 
+
+
+
+/*
 //Botn de google
 btnGoogle.addEventListener("click", async () => {
   spinner.classList.remove("hidden");
@@ -48,3 +53,5 @@ btnGoogle.addEventListener("click", async () => {
     btnGoogle.disabled = false;
   }
 });
+
+ */

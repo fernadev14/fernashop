@@ -1,7 +1,8 @@
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { app, db } from "../js/utils/firebaseConfig.js";
-import { renderProductosAdmin } from "../js/components/renderProductosAdmin.js";
-import { observarEstadoAuth } from "../js/utils/authhState.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"; 
+import { app, db } from "../utils/firebaseConfig.js"; 
+import { renderProductosAdmin } from "../components/renderProductosAdmin.js "; 
+import { observarEstadoAuth } from "../utils/authhState.js"; 
+import { descargarPlantillaExcel } from "../utils/plantillaExcel.js";
 
 //IMPORTAR PRODUCTOS
 import {
@@ -198,7 +199,6 @@ document.getElementById('form-importar-productos').addEventListener('submit', as
 
             // Verificar si todos los campos estan vacios
             if (parts.every(field => !field.trim())) continue;
-            
             const [nombre, precio, imagen, talla, stock, genero, descripcion] = parts;
             if (nombre && precio && imagen && talla && stock && genero && descripcion) {
               const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(nombre, imagen);
@@ -238,15 +238,162 @@ document.getElementById('form-importar-productos').addEventListener('submit', as
 });
 
 // ===========================
+// DESCARGAR PLANTILLA CSV
+// ===========================
+document.getElementById("descargar-ejemplo")?.addEventListener("click", () => {
+  descargarPlantillaExcel();
+  // const encabezados = "nombre,precio,imagen,talla,stock,genero,descripcion\n";
+  // const ejemplo = "Camiseta Azul,50000,https://urlimagen.com/camiseta.jpg,M,20,Hombre,Bonita camiseta de algodón\n";
+  
+  // const blob = new Blob([encabezados + ejemplo], { type: "text/csv" });
+  // const url = URL.createObjectURL(blob);
+  // const a = document.createElement("a");
+  // a.href = url;
+  // a.download = "plantilla_productos.csv";
+  // a.click();
+  // URL.revokeObjectURL(url);
+});
+
+// ===========================
 // CAMBIAR NOMBRE AL CARGAR EL ARCHIVO EN EL INPUT PARA IMPORTAR LOS PRODUCTOS
 // ===========================
-fileInput.addEventListener('change', function () {
-    if (fileInput.files.length > 0) {
-        nombreArchivo.lastChild.textContent = fileInput.files[0].name;
-    } else {
-        nombreArchivo.lastChild.textContent = 'Elige un archivo';
-    }
+// fileInput.addEventListener('change', function () {
+//     if (fileInput.files.length > 0) {
+//         nombreArchivo.lastChild.textContent = fileInput.files[0].name;
+//     } else {
+//         nombreArchivo.lastChild.textContent = 'Elige un archivo';
+//     }
+// });
+
+// ===========================
+// PREVISUALIZAR CSV EN MODAL
+// ===========================
+let datosCSV = [];
+
+fileInput.addEventListener("change", function () {
+  if (fileInput.files.length > 0) {
+    nombreArchivo.lastChild.textContent = fileInput.files[0].name;
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const text = event.target.result;
+      const rows = text.split("\n").filter(Boolean);
+      datosCSV = rows.map(row => {
+        const parts = row.includes(";") ? row.split(";") : row.split(",");
+        return {
+          nombre: parts[0]?.trim(),
+          precio: parts[1]?.trim(),
+          imagen: parts[2]?.trim(),
+          talla: parts[3]?.trim(),
+          stock: parts[4]?.trim(),
+          genero: parts[5]?.trim(),
+          descripcion: parts[6]?.trim()
+        };
+      });
+
+      abrirModalPreview();
+      renderizarPreview(datosCSV);
+    };
+    reader.readAsText(fileInput.files[0]);
+  }
 });
+
+
+function renderizarPreview(datos) {
+  const table = document.getElementById("preview-table");
+
+  let html = `
+    <thead class="bg-gray-100 sticky top-0">
+      <tr>
+        <th class="border px-3 py-2">Nombre</th>
+        <th class="border px-3 py-2">Precio</th>
+        <th class="border px-3 py-2">Imagen</th>
+        <th class="border px-3 py-2">Talla</th>
+        <th class="border px-3 py-2">Stock</th>
+        <th class="border px-3 py-2">Género</th>
+        <th class="border px-3 py-2">Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  datos.forEach(d => {
+    html += `
+      <tr>
+        <td class="border px-3 py-2">${d.nombre}</td>
+        <td class="border px-3 py-2">${d.precio}</td>
+        <td class="border px-3 py-2">
+          <img src="${d.imagen}" alt="img" class="w-12 h-12 object-cover rounded">
+        </td>
+        <td class="border px-3 py-2">${d.talla}</td>
+        <td class="border px-3 py-2">${d.stock}</td>
+        <td class="border px-3 py-2">${d.genero}</td>
+        <td class="border px-3 py-2">${d.descripcion}</td>
+      </tr>
+    `;
+  });
+
+  html += "</tbody>";
+  table.innerHTML = html;
+}
+
+// ===========================
+// ABRIR / CERRAR MODAL PREVIEW
+// ===========================
+const modalPreview = document.getElementById("modal-preview");
+const cancelarPreviewBtn = document.getElementById("cancelar-preview");
+const confirmarPreviewBtn = document.getElementById("confirmar-importacion");
+const previsualizarBtn = document.getElementById("previsualizar");
+
+function abrirModalPreview() {
+  modalPreview.classList.remove("hidden");
+}
+
+function cerrarModalPreview() {
+  modalPreview.classList.add("hidden");
+}
+
+previsualizarBtn.addEventListener("click", () => {
+  abrirModalPreview(); // 🔹 Reutilizamos la misma función
+});
+
+// console.log(previsualizarBtn)
+
+cancelarPreviewBtn.addEventListener("click", cerrarModalPreview);
+confirmarPreviewBtn.addEventListener("click", cerrarModalPreview);
+
+// ===========================
+// CONFIRMAR IMPORTACIÓN
+// ===========================
+// document.getElementById("confirmar-importacion").addEventListener("click", async () => {
+//   let exitos = 0, fallos = 0;
+
+//   for (const d of datosCSV) {
+//     try {
+//       if (d.nombre && d.precio && d.imagen && d.talla && d.stock && d.genero && d.descripcion) {
+//         const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(d.nombre, d.imagen);
+//         if (!duplicadoNombre && !duplicadoImagen) {
+//           await agregarProducto(d);
+//           exitos++;
+//         } else {
+//           fallos++;
+//         }
+//       } else {
+//         fallos++;
+//       }
+//     } catch {
+//       fallos++;
+//     }
+//   }
+
+//   Swal.fire({
+//     title: "Importación completada",
+//     text: `✅ Éxitos: ${exitos} | ❌ Fallos: ${fallos}`,
+//     icon: exitos ? "success" : "error"
+//   });
+
+//   cargarProductos();
+// });
 
 // ===========================
 // CARGAR PRODUCTOS CSV

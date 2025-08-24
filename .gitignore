@@ -1,2 +1,2 @@
-/js/utils/firebaseConfig.js
-/auth/admin.js
+/public/js/utils/firebaseConfig.js
+/public/js/auth/modules/auth.js

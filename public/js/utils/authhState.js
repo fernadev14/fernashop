@@ -9,7 +9,7 @@ export function observarEstadoAuth() {
 
   onAuthStateChanged(auth, user => {
     const logoutBtn = document.getElementById("logout-btn");
-    const loginBtn = document.getElementById("login-btn"); // Agrega este ID al botón si quieres ocultarlo
+    const loginBtn = document.getElementById("login-btn");
     const saludo = document.getElementById("user-greeting");
     const tiendaBtn = document.getElementById("btnTienda");
 
