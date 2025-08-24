@@ -9,9 +9,17 @@ let datosCSV = [];
 let fileInput = null;
 let nombreArchivoElement = null;
 
+// Elementos del DOM para el loading
+let loadingOverlay = null;
+let loadingProgress = null;
+
 export function inicializarImportacion(fileInputElement, nombreArchivo) {
     fileInput = fileInputElement;
     nombreArchivoElement = nombreArchivo;
+
+    // Obtener elementos del DOM para el loading
+    loadingOverlay = document.getElementById('loading-overlay');
+    loadingProgress = document.getElementById('loading-progress');
     
     // Configurar evento change para el input de archivo
     fileInput.addEventListener("change", function () {
@@ -24,13 +32,39 @@ export function inicializarImportacion(fileInputElement, nombreArchivo) {
     });
 }
 
+// Mostrar loading
+function mostrarLoading(total) {
+    if (loadingOverlay && loadingProgress) {
+        loadingProgress.textContent = `Procesando 0 de ${total}`;
+        loadingOverlay.classList.remove('hidden');
+    }
+}
+
+// Actualizar progreso
+function actualizarProgreso(actual, total) {
+    if (loadingProgress) {
+        loadingProgress.textContent = `Procesando ${actual} de ${total}`;
+    }
+}
+
+// Ocultar loading
+function ocultarLoading() {
+    if (loadingOverlay) {
+        loadingOverlay.classList.add('hidden');
+    }
+}
+
 // Leer archivo CSV
 function leerArchivoCSV(archivo) {
     const reader = new FileReader();
     reader.onload = function (event) {
         const text = event.target.result;
         const rows = text.split("\n").filter(Boolean);
-        datosCSV = rows.map(row => {
+
+        // Omitir la primera fila (encabezados)
+        const filasDatos = rows.slice(1);
+
+        datosCSV = filasDatos.map(row => {
             const parts = row.includes(";") ? row.split(";") : row.split(",");
             return {
                 nombre: parts[0]?.trim(),
@@ -53,29 +87,43 @@ export function obtenerDatosCSV() {
 
 // Procesar importación
 export async function procesarImportacion() {
+    const total = datosCSV.length;
     let exitos = 0, fallos = 0, duplicadosNombre = 0, duplicadosImagen = 0;
-
-    for (const d of datosCSV) {
-        try {
-            if (d.nombre && d.precio && d.imagen && d.talla && d.stock && d.genero && d.descripcion) {
-                const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(d.nombre, d.imagen);
-                if (duplicadoNombre) {
-                    duplicadosNombre++;
-                    continue;
+    
+    // Mostrar loading
+    mostrarLoading(total);
+    
+    try {
+        for (let i = 0; i < total; i++) {
+            const d = datosCSV[i];
+            
+            // Actualizar progreso
+            actualizarProgreso(i + 1, total);
+            
+            try {
+                if (d.nombre && d.precio && d.imagen && d.talla && d.stock && d.genero && d.descripcion) {
+                    const { duplicadoNombre, duplicadoImagen } = await validarDuplicado(d.nombre, d.imagen);
+                    if (duplicadoNombre) {
+                        duplicadosNombre++;
+                        continue;
+                    }
+                    if (duplicadoImagen) {
+                        duplicadosImagen++;
+                        continue;
+                    }
+                    
+                    await agregarProductoDesdeCSV(d);
+                    exitos++;
+                } else {
+                    fallos++;
                 }
-                if (duplicadoImagen) {
-                    duplicadosImagen++;
-                    continue;
-                }
-                
-                await agregarProductoDesdeCSV(d);
-                exitos++;
-            } else {
+            } catch {
                 fallos++;
             }
-        } catch {
-            fallos++;
         }
+    } finally {
+        // Ocultar loading siempre, incluso si hay errores
+        ocultarLoading();
     }
 
     return { exitos, fallos, duplicadosNombre, duplicadosImagen };
