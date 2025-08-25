@@ -4,8 +4,8 @@ import { obtenerProductosFirestore } from './data/productosFirestore.js';
 import { renderNav } from './components/navBar.js';
 import { observarEstadoAuth } from './utils/authhState.js';
 import { renderFooter } from './components/footer.js';
-import { renderProductos } from './components/renderProductos.js';
-import { agregarAlCarrito, manejarEventosCarrito, abrirCarrito, countadorCarritoIcon, renderCarrito } from './components/cart.js';
+import { renderProductos, actualizarProductoIndividual } from './components/renderProductos.js';
+import { agregarAlCarrito, inicializarCarrito, abrirCarrito } from './components/cart.js';
 
 export let productosFirestore = [];
 
@@ -19,19 +19,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     carritoGuardado.forEach(itemCarrito => {
         const producto = productosFirestore.find(p => p.id === itemCarrito.id);
         if (producto) {
-            producto.stock = Math.max(0, producto.stock - itemCarrito.cantidad);
+            // agregarAlCarrito(producto);
+            actualizarProductoIndividual(producto);
         }
     });
 
     renderProductos(productosFirestore, '#productos');
+    preloadImages();
     // console.log(productosFirestore)
 
     renderNav('header'); // se pasa el parametro de la etiqueta a la funcion renderNav
     observarEstadoAuth(); // funcion oauth
     renderFooter('footer');
-    renderCarrito();
-    manejarEventosCarrito(); // Activamos la escucha de eventos del carrito
-    countadorCarritoIcon()   // Contador de productos en el carrito icon de compras
+    inicializarCarrito();
 
     // Añadir listener despues de renderNav()
     const categoriaSelect = document.getElementById('categoria-select');
@@ -72,15 +72,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Evento para agregar al carrito producto
 document.addEventListener('click', (e) => {
     const btn = e.target.closest('.btn-add-cart');
-    if (btn) {
-        e.preventDefault(); // Previene el submit si está en un form
+    if (btn && !btn.disabled) {
+        e.preventDefault();
+        e.stopPropagation(); // ← Esto evita que el clic se propague al enlace
+
+        // Animación de confirmación
+        const originalBg = btn.style.backgroundColor;
+        const originalHtml = btn.innerHTML;
+        
+        btn.style.backgroundColor = '#10B981'; // Verde
+        btn.innerHTML = `
+          <svg class="cart" fill="currentColor" viewBox="0 0 448 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+            <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/>
+          </svg>
+          <span class="text">¡Agregado!</span>
+        `;
+
+        // Restaurar después de 1.5 segundos
+        setTimeout(() => {
+            btn.style.backgroundColor = originalBg;
+            btn.innerHTML = originalHtml;
+        }, 1500);
+
         const id = btn.dataset.id;
         const producto = productosFirestore.find(p => p.id === id);
         if(producto){
             agregarAlCarrito(producto); // Agrega al carrito
             if (producto.stock > 0) {
                 producto.stock -= 1;
-                renderProductos(productosFirestore, '#productos');
+                // renderProductos(productosFirestore, '#productos');
+                actualizarProductoIndividual(producto);
+                //preloadImages(); // Precargar imágenes nuevamente
             }
         } else {
             console.warn("producto no encontrado para ID: ", id);
@@ -94,4 +116,27 @@ document.addEventListener('click', (e) => {
 function scrollBehaivor() {
             const productosSection = document.querySelector('#productos');
             productosSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Función para precargar imágenes y evitar layout shifting
+function preloadImages() {
+  const images = document.querySelectorAll('.product-img');
+  images.forEach(img => {
+    // Agregar una clase de skeleton mientras carga
+    img.classList.add('skeleton');
+    
+    // Cuando la imagen cargue, quitar el skeleton
+    if (img.complete) {
+      img.classList.remove('skeleton');
+    } else {
+      img.addEventListener('load', function() {
+        this.classList.remove('skeleton');
+      });
+      
+      img.addEventListener('error', function() {
+        this.classList.remove('skeleton');
+        this.src = 'https://via.placeholder.com/300x300?text=Imagen+No+Disponible';
+      });
+    }
+  });
 }

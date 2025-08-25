@@ -1,10 +1,12 @@
 import { mostrarToast, animarIconoCarrito } from '../utils/notificaciones.js';
-import { renderProductos } from './renderProductos.js';
+// import { renderProductos } from './renderProductos.js';
+import { actualizarProductoIndividual } from './renderProductos.js';
 import { productosFirestore } from '../index.js';
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
 export function agregarAlCarrito(producto) {
+  console.log('agregarAlCarrito llamado para:', producto.producto);
   const existente = carrito.find(p => p.id === producto.id);
   if (existente) {
     if (existente.cantidad < existente.stock) {
@@ -40,6 +42,7 @@ export function agregarAlCarrito(producto) {
 
 // Funcion de contador de productos en el icono del carrito
 export function countadorCarritoIcon() {
+  console.log('countadorCarritoIcon llamado. Carrito:', carrito);
   const countSpanCar = document.getElementById('cart-count');
   if (!countSpanCar) {
     console.warn("Elemento con ID 'cart-count' no encontrado.");
@@ -142,7 +145,8 @@ export function manejarEventosCarrito() {
           const prod = productosFirestore.find(p => p.id === id);
           if (prod && prod.stock > 0) {
             prod.stock -= 1;
-            renderProductos(productosFirestore, '#productos');
+            // renderProductos(productosFirestore, '#productos');
+            actualizarProductoIndividual(prod);
           }
           guardarCarrito();
           renderCarrito();
@@ -167,7 +171,8 @@ export function manejarEventosCarrito() {
         const producto = productosFirestore.find(p => p.id === id);
         if (producto) {
           producto.stock += 1;
-          renderProductos(productosFirestore, '#productos');
+          // renderProductos(productosFirestore, '#productos');
+          actualizarProductoIndividual(producto);
         }
         guardarCarrito();
         renderCarrito();
@@ -184,7 +189,8 @@ export function manejarEventosCarrito() {
         const producto = productosFirestore.find(p => p.id === id);
         if (producto) {
           producto.stock += prod.cantidad;
-          renderProductos(productosFirestore, '#productos');
+          // renderProductos(productosFirestore, '#productos');
+          actualizarProductoIndividual(producto);
         }
       }
 
@@ -202,8 +208,9 @@ export function manejarEventosCarrito() {
         if (producto) {
           producto.stock += item.cantidad;
         }
+        actualizarProductoIndividual(producto);
       });
-      renderProductos(productosFirestore, '#productos');
+      // renderProductos(productosFirestore, '#productos');
       carrito = [];
       guardarCarrito();
       renderCarrito();
@@ -216,4 +223,17 @@ export function manejarEventosCarrito() {
 
 
   });
+}
+
+// En cart.js, agrega esta función al final
+export function inicializarCarrito() {
+    renderCarrito();
+    countadorCarritoIcon();
+    manejarEventosCarrito();
+    
+    // Configurar evento para el botón del carrito
+    const cartBtn = document.getElementById('cart-btn');
+    if (cartBtn) {
+        cartBtn.addEventListener('click', abrirCarrito);
+    }
 }
