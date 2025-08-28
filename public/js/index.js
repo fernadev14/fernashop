@@ -16,22 +16,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     productosFirestore = await obtenerProductosFirestore();
 
     const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
+
     carritoGuardado.forEach(itemCarrito => {
         const producto = productosFirestore.find(p => p.id === itemCarrito.id);
         if (producto) {
             // agregarAlCarrito(producto);
-            actualizarProductoIndividual(producto);
+            producto.stock -= itemCarrito.cantidad; // Descontar lo que ya estaba en el carrito
+            if (producto.stock < 0) producto.stock = 0; // Por seguridad
+            // actualizarProductoIndividual(producto);
         }
     });
 
+    // Renderizar productos con stock ya actualizado
     renderProductos(productosFirestore, '#productos');
     preloadImages();
     // console.log(productosFirestore)
 
     renderNav('header'); // se pasa el parametro de la etiqueta a la funcion renderNav
     observarEstadoAuth(); // funcion oauth
-    renderFooter('footer');
     inicializarCarrito();
+    renderFooter('footer');
 
     // Añadir listener despues de renderNav()
     const categoriaSelect = document.getElementById('categoria-select');

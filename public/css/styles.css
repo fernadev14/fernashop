@@ -107,7 +107,7 @@
     padding: 10px 16px;
     border-radius: 6px;
     font-weight: 600;
-    margin-top: 16px;
+    /* margin-top: 16px; */
 }
 
 .btn-add-cart:not([disabled]):hover {
