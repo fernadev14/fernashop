@@ -1,7 +1,7 @@
-import { obtenerProductosFirestore } from '../../data/productosFirestore.js';
-import { renderNav } from '../../components/navBar.js';
-import { renderFooter } from '../../components/footer.js';
-import { agregarAlCarrito, inicializarCarrito } from '../../components/cart.js';
+import { obtenerProductosFirestore } from '../data/productosFirestore.js';
+import { renderNav } from './navBar.js';
+import { renderFooter } from './footer.js';
+import { agregarAlCarrito, inicializarCarrito } from './cart.js';
 
 // Obtener el ID del producto de la URL
 function obtenerIdProductoDeURL() {
@@ -181,11 +181,11 @@ function configurarEventosProducto(producto) {
             btn.innerHTML = originalText;
         }, 2000);
         
-        // Deshabilitar el botón temporalmente para evitar múltiples clics
-        // btn.disabled = true;
-        // setTimeout(() => {
-        //     btn.disabled = false;
-        // }, 1000);
+        //Deshabilitar el botón temporalmente para evitar múltiples clics
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.disabled = false;
+        }, 1000);
     };
     
     // Comprar ahora - VERSIÓN CORREGIDA
