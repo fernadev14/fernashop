@@ -19,7 +19,7 @@
     <!-- Layout grid global -->
     <div class="min-h-screen bg-gray-100 grid md:grid-cols-[300px_1fr]">
 
-        <!-- Sidebar -->
+        <!-- ASIDE -->
         <aside id="sidebar"
             class="bg-blue-600 text-white p-4 hidden md:block fixed md:static w-70 md:w-auto h-full z-50">
             <nav id="navAdmin" class="flex flex-col h-full fixed justify-between">
@@ -128,12 +128,15 @@
                 </form>
             </section>
 
+            <!-- CONTENIDO PRODUCTOS -->
             <section class="mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <input type="text" id="input-buscar" placeholder="Buscar producto"
                         class="border p-2 rounded w-full max-w-xs">
                     <p id="contador-productos" class="text-gray-600 ml-4">Total: 0 productos</p>
                 </div>
+                <!-- LOADING -->
+                <div id="loader"></div>
                 <ul id="lista-productos" class="grid gap-4"></ul>
             </section>
         </main>

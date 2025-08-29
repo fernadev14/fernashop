@@ -92,3 +92,28 @@
     transform: translateY(-400%);
   }
 }
+
+/* LOADING ADMIN.HTML */
+/* Loader admin */
+.admin-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.admin-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #dbeafe;
+  border-top: 6px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-top: 15px;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+

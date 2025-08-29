@@ -1,11 +1,12 @@
 // Importaciones de Firebase
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"; 
-import { app, db } from "../utils/firebaseConfig.js"; 
+// import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"; 
+// import { app, db } from "../utils/firebaseConfig.js"; 
 
 // Importaciones de componentes
-import { renderProductosAdmin } from "../components/renderProductosAdmin.js"; 
+// import { renderProductosAdmin } from "../components/renderProductosAdmin.js";
 import { observarEstadoAuth } from "../utils/authhState.js"; 
 import { descargarPlantillaExcel } from "../utils/plantillaExcel.js";
+import { showLoader, hideLoader } from "../components/loading/loading.js";
 
 // Importaciones de módulos propios
 import { 
@@ -262,7 +263,15 @@ async function cargarYRenderizarProductos() {
 
 // Inicializar la aplicación
 async function inicializar() {
-    await cargarYRenderizarProductos();
+    showLoader("admin"); // 👈 loader en modo admin
+
+    try {
+        await cargarYRenderizarProductos(); // carga inicial de productos
+    } catch (err) {
+        console.error("Error inicializando admin:", err);
+    } finally {
+        hideLoader(); // 👈 ocultar cuando ya estén pintados
+    }
 }
 
 // Iniciar la aplicación
