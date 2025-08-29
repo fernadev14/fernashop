@@ -6,6 +6,10 @@ import { observarEstadoAuth } from './utils/authhState.js';
 import { renderFooter } from './components/footer.js';
 import { renderProductos, actualizarProductoIndividual } from './components/renderProductos.js';
 import { agregarAlCarrito, inicializarCarrito, abrirCarrito } from './components/cart.js';
+import { init } from './components/loading/loading.js';
+
+// FUNCION LOADING AL INICIAR
+init();
 
 export let productosFirestore = [];
 

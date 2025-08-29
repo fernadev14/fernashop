@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./css/buttons.css">
     <link rel="stylesheet" href="./css/logout.css">
     <link rel="stylesheet" href="./css/product-detail.css">
+    <link rel="stylesheet" href="./css/loading.css">
 
     <!-- <script defer type="module" src="./js/index.js"></script> -->
 
@@ -18,15 +19,25 @@
 </head>
 
 <body>
+
+    <div id="loader" class="cardLoading">
+        <div class="loader flex justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#956afa] mr-4"></div>
+            <p>FernaShop</p>
+            <div class="words">
+                <span class="word">botones</span>
+                <span class="word">tenis</span>
+                <span class="word">busos</span>
+                <span class="word">camisetas</span>
+                <span class="word">jeans</span>
+            </div>
+        </div>
+    </div>
     <header class="header-index"></header>
 
     <main class="mainDetail mx-auto px-4 py-8">
         <div id="producto-detalle" class="max-w-6xl mx-auto mt-24">
             <!-- El contenido se cargará dinámicamente con JavaScript -->
-            <div class="text-center py-20">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                <p class="mt-4 text-gray-600">Cargando producto...</p>
-            </div>
         </div>
     </main>
 

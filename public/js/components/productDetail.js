@@ -1,7 +1,8 @@
 import { obtenerProductosFirestore } from '../data/productosFirestore.js';
 import { renderNav } from './navBar.js';
 import { renderFooter } from './footer.js';
-import { agregarAlCarrito, inicializarCarrito } from './cart.js';
+import { agregarAlCarrito } from './cart.js';
+import { showLoader, hideLoader } from './loading/loading.js';
 
 // Obtener el ID del producto de la URL
 function obtenerIdProductoDeURL() {
@@ -208,14 +209,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderNav('header');
     renderFooter('footer');
 
-    // Inicializar funcionalidad del carrito
-    // inicializarCarrito();
+    showLoader(); //APARECE LOADING
     
     // Obtener el ID del producto de la URL
     const productId = obtenerIdProductoDeURL();
     
     if (!productId) {
         renderProductoDetalle(null);
+        hideLoader(); // OCULTA LOADING SI NO HAY PRODUCTOS
         return;
     }
     
@@ -223,11 +224,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Cargar los productos
         const productos = await obtenerProductosFirestore();
         const producto = productos.find(p => p.id === productId);
+
+        // 📝 Cambiar el título dinámico
+        if (producto) {
+            // 📝 Cambiar el título dinámico
+            document.title = `${producto.producto} | FernaShop`;
+
+            // 📝 Meta Description
+            let metaDescription = document.querySelector("meta[name='description']");
+            if (!metaDescription) {
+                metaDescription = document.createElement("meta");
+                metaDescription.setAttribute("name", "description");
+                document.head.appendChild(metaDescription);
+            }
+            metaDescription.setAttribute("content", producto.descripcion || `Compra ${producto.producto} en FernaShop al mejor precio.`);
+
+            // 📝 Open Graph Tags
+            const ogTags = {
+                "og:title": `${producto.producto} | FernaShop`,
+                "og:description": producto.descripcion || `Compra ${producto.producto} en FernaShop al mejor precio.`,
+                "og:image": producto.imagen || "/img/default-product.png",
+                "og:type": "product",
+                "og:url": window.location.href
+            };
+
+            Object.entries(ogTags).forEach(([property, content]) => {
+                let metaTag = document.querySelector(`meta[property='${property}']`);
+                if (!metaTag) {
+                    metaTag = document.createElement("meta");
+                    metaTag.setAttribute("property", property);
+                    document.head.appendChild(metaTag);
+                }
+                metaTag.setAttribute("content", content);
+            });
+
+        } else {
+            document.title = "Producto no encontrado | FernaShop";
+        }
         
         // Renderizar el detalle del producto
         renderProductoDetalle(producto);
+
+        // Esperar a que cargue la imagen principal antes de ocultar loader
+        const img = document.getElementById('main-image');
+        if (img) {
+            await new Promise((resolve) => {
+                if (img.complete) resolve(); // ya estaba en caché
+                else img.onload = resolve;
+            });
+        }
     } catch (error) {
         console.error('Error al cargar el producto:', error);
         renderProductoDetalle(null);
+    } finally {
+        hideLoader(); // SOLO DESAPARECE CUANDO TODO SE RENDERIZA
     }
 });

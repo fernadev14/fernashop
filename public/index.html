@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/buttons.css">
     <link rel="stylesheet" href="./css/logout.css">
     <link rel="stylesheet" href="./css/cart.css">
+    <link rel="stylesheet" href="./css/loading.css">
     <!-- SCRIPTS -->
     <script defer type="module" src="./js/index.js"></script>
 
@@ -20,8 +21,26 @@
 </head>
 
 <body>
-    <header class="header-index"></header>
-    <main class="main-index">
+    <!-- LOADING -->
+    <div id="loader" class="cardLoading">
+        <div class="loader flex justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#956afa] mr-4"></div>
+            <p>FernaShop</p>
+            <div class="words">
+                <span class="word">botones</span>
+                <span class="word">tenis</span>
+                <span class="word">busos</span>
+                <span class="word">camisetas</span>
+                <span class="word">jeans</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header-index hidden"></header>
+
+    <!-- MAIN -->
+    <main class="main-index hidden">
         <section id="productos" class="container"></section>
 
         <!-- carrito de compra -->
@@ -41,7 +60,9 @@
             </div>
         </div>
     </main>
-    <footer></footer>
+
+    <!-- FOOTER -->
+    <footer class="hidden"></footer>
 
     <!-- Toast de confirmación -->
     <div id="toast-container" class="fixed top-30 right-4 z-50 space-y-2"></div>
