@@ -4,7 +4,7 @@ import { app, db } from "../utils/firebaseConfig.js";
 
 // Importaciones de componentes
 import { renderProductosAdmin } from "../components/renderProductosAdmin.js"; 
-import { observarEstadoAuth } from "../utils/authHState.js"; 
+import { observarEstadoAuth } from "../utils/authhState.js"; 
 import { descargarPlantillaExcel } from "../utils/plantillaExcel.js";
 
 // Importaciones de módulos propios
