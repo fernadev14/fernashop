@@ -5,34 +5,29 @@ import { productosFirestore } from '../index.js';
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-export function agregarAlCarrito(producto) {
-  console.log('agregarAlCarrito llamado para:', producto.producto);
+export function agregarAlCarrito(producto, cantidad = 1) {
+  console.log('agregarAlCarrito llamado para:', producto.producto, 'Cantidad:', cantidad);
+
   const existente = carrito.find(p => p.id === producto.id);
+
   if (existente) {
-    if (existente.cantidad < existente.stock) {
-      existente.cantidad++;
-  } else {
-    mostrarToast('No hay más stock disponible para este producto', 'error');
-      return;
-  }
-  
-  if (typeof carrito === 'undefined') {
-    console.warn("Variable 'carrito' no está definida.");
-    return;
-  }
- 
-  } else {
-    if (producto.stock > 0) {
-      carrito.push({ ...producto, cantidad: 1 });
+    if (existente.cantidad + cantidad <= existente.stock) {
+      existente.cantidad += cantidad;
     } else {
-      mostrarToast('Producto sin stock', 'error');
+      mostrarToast('No hay suficiente stock disponible', 'error');
+      return;
+    }
+  } else {
+    if (producto.stock >= cantidad) {
+      carrito.push({ ...producto, cantidad: cantidad });
+    } else {
+      mostrarToast('No hay suficiente stock disponible', 'error');
       return;
     }
   }
 
   mostrarToast('Producto agregado correctamente', 'success');
   animarIconoCarrito();
-
 
   guardarCarrito();
   renderCarrito();

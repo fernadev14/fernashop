@@ -190,16 +190,20 @@ function configurarEventosProducto(producto) {
     };
     
     // Comprar ahora - VERSIÓN CORREGIDA
-    document.getElementById('buy-now').onclick = function(event) {
+    document.getElementById('buy-now').addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
-        event.stopImmediatePropagation();
+    
+        console.log('🟢 COMPRAR AHORA - Producto:', producto.producto, 'Cantidad:', quantity);
         
-        console.log('Botón comprar ahora clickeado - cantidad:', quantity);
+        // Agregar al carrito (pero solo este producto)
         agregarAlCarrito(producto, quantity);
-        window.location.href = 'cart.html';
-    };
-
+    
+        // Redirigir a la página de pago
+        setTimeout(() => {
+            window.location.href = 'buyNow.html';
+        }, 100);
+    });
 
 }
 
