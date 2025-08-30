@@ -189,7 +189,7 @@ function configurarEventosProducto(producto) {
         }, 1000);
     };
     
-    // Comprar ahora - VERSIÓN CORREGIDA
+    // Comprar ahora
     document.getElementById('buy-now').addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();

@@ -1,0 +1,68 @@
+.payment-method {
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.payment-method input[type="radio"] {
+    margin-right: 0.5rem;
+}
+
+.card-details {
+    display: none;
+}
+
+#tarjeta:checked ~ .card-details {
+    display: block;
+}
+
+.increment-qty, .decrement-qty {
+    transition: background-color 0.2s;
+}
+
+.increment-qty:hover, .decrement-qty:hover {
+    background-color: #e5e7eb;
+}
+
+.increment-qty:active, .decrement-qty:active {
+    background-color: #d1d5db;
+}
+
+.eliminar-item {
+    transition: color 0.2s;
+}
+
+.eliminar-item:hover {
+    color: #dc2626;
+}
+
+/* En tu archivo CSS principal */
+.stock-updated {
+    animation: highlight 1.5s ease-in-out;
+}
+
+@keyframes highlight {
+    0% { background-color: transparent; }
+    50% { background-color: #f0f9ff; }
+    100% { background-color: transparent; }
+}
+
+/* Estilos para los botones deshabilitados */
+.opacity-50 {
+    opacity: 0.5;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}

@@ -1,14 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Finalizar Compra | FernaShop</title>
+    <!-- <link rel="stylesheet" href="./css/styles.css"> -->
+    <link rel="stylesheet" href="./css/checkout.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body>
-    <h1>comprar</h1>
+    <header class="header-index"></header>
+
+    <main class="container mx-auto px-4 py-8 mt-24">
+        <h1 class="text-2xl font-bold mb-6">Finalizar Compra</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Resumen del pedido -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Resumen de tu compra</h2>
+                <div id="resumen-compra"></div>
+                <div class="border-t pt-4 mt-4">
+                    <div class="flex justify-between text-lg font-semibold">
+                        <span>Total:</span>
+                        <span id="total-compra">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de pago -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Método de Pago</h2>
+
+                <form id="formulario-pago" class="space-y-4">
+                    <!-- Tarjeta de crédito -->
+                    <div class="payment-method">
+                        <input type="radio" id="tarjeta" name="metodo-pago" value="tarjeta" checked>
+                        <label for="tarjeta">Tarjeta de Crédito/Débito</label>
+
+                        <div class="card-details mt-3">
+                            <input type="text" placeholder="Número de tarjeta" class="w-full p-2 border rounded">
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <input type="text" placeholder="MM/AA" class="p-2 border rounded">
+                                <input type="text" placeholder="CVV" class="p-2 border rounded">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PSE -->
+                    <div class="payment-method">
+                        <input type="radio" id="pse" name="metodo-pago" value="pse">
+                        <label for="pse">PSE (Pagos Seguros en Línea)</label>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="flex gap-4 mt-6">
+                        <button type="button" onclick="window.history.back()"
+                            class="bg-gray-300 text-gray-700 px-6 py-2 rounded">
+                            Volver
+                        </button>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                            Pagar ahora
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- carrito de compra -->
+    <div id="cart-sidebar"
+        class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg z-50 transform translate-x-full transition-transform duration-300 z-index[1000]">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-semibold">Carrito</h2>
+            <button id="close-cart" class="text-gray-500 hover:text-red-500 cursor-pointer">✕</button>
+        </div>
+        <div id="cart-items" class="p-4 space-y-4 max-h-[calc(80vh-150px)] overflow-y-auto"></div>
+        <!-- Botón vaciar carrito se inyecta dinámicamente -->
+        <div id="vaciar-carrito-container" class="text-right mt-0 mr-4"></div>
+        <div id="cart-total" class="text-right font-bold mt-4 mr-4 mb-4">Total: $0.00</div>
+        <div class="p-4 border-t">
+            <button id="checkout" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Pagar</button>
+        </div>
+    </div>
+
+    <footer></footer>
+
+    <script type="module" src="./js/components/checkout.js"></script>
 </body>
 
 </html>

@@ -34,7 +34,6 @@ export function agregarAlCarrito(producto, cantidad = 1) {
   countadorCarritoIcon();
 }
 
-
 // Funcion de contador de productos en el icono del carrito
 export function countadorCarritoIcon() {
   console.log('countadorCarritoIcon llamado. Carrito:', carrito);
@@ -225,10 +224,32 @@ export function inicializarCarrito() {
     renderCarrito();
     countadorCarritoIcon();
     manejarEventosCarrito();
+    configurarBotonCheckout();
     
     // Configurar evento para el botón del carrito
     const cartBtn = document.getElementById('cart-btn');
     if (cartBtn) {
         cartBtn.addEventListener('click', abrirCarrito);
     }
+}
+
+// BOTON DE PAGAR
+export function configurarBotonCheckout() {
+    // Usar event delegation para el botón de checkout
+    document.addEventListener('click', (e) => {
+        if (e.target.id === 'checkout') {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('🟢 BOTÓN CHECKOUT CLICKEADO');
+            
+            if (carrito.length === 0) {
+                mostrarToast('El carrito está vacío', 'error');
+                return;
+            }
+            
+            // Redirigir a la página de pago
+            window.location.href = 'buyNow.html';
+        }
+    });
 }
