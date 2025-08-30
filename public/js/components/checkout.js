@@ -22,11 +22,11 @@ function obtenerStockDisponible(productoId) {
 
 function renderResumenCompra() {
     const container = document.getElementById('resumen-compra');
-    const totalContainer = document.getElementById('total-compra');
+    // const totalContainer = document.getElementById('total-compra');
     
     if (!container) return;
 
-    container.innerHTML = carrito.map(item =>{ 
+    container.innerHTML = carrito.map(item => { 
         const stockDisponible = obtenerStockDisponible(item.id);
         const maxCantidad = Math.min(stockDisponible, item.stock);
 
@@ -165,16 +165,56 @@ document.getElementById('formulario-pago').addEventListener('submit', function(e
     }
     
     // Si todo está bien, procesar pago
-    mostrarToast('Procesando pago...', 'info');
+    let timerInterval;
+    Swal.fire({
+      title: "Procesando pago...",
+      html: "en espera de <b></b> milisegundos.",
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup().querySelector("b");
+        timerInterval = setInterval(() => {
+          timer.textContent = `${Swal.getTimerLeft()}`;
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      }
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log("I was closed by the timer");
+      }
+    });
     
     setTimeout(() => {
-        mostrarToast('¡Pago exitoso! Tu pedido ha sido procesado.', 'success');
+        Swal.fire({
+          title: "<strong>Gracias por tu compra 👍</strong>",
+          icon: "success",
+          html: `
+            Visitanos <b>en nuestras</b>,
+            <a href="#" autofocus>redes sociales</a>,
+            estamos para atenderte
+          `,
+          showCloseButton: true,
+          showCancelButton: true,
+          focusConfirm: false,
+          confirmButtonText: `
+            <i class="fa fa-thumbs-up"></i> Great!
+          `,
+          confirmButtonAriaLabel: "Thumbs up, me gusta!",
+          cancelButtonText: `
+            <i class="fa fa-thumbs-down"></i>
+          `,
+          cancelButtonAriaLabel: "Thumbs down"
+        });
         localStorage.removeItem('carrito');
         
         setTimeout(() => {
             window.location.href = 'index.html';
-        }, 2000);
-    }, 3000);
+        }, 3000);
+    }, 4000);
 });
 
 // Inicializar
