@@ -48,21 +48,45 @@
     100% { background-color: transparent; }
 }
 
-/* Estilos para los botones deshabilitados */
-.opacity-50 {
-    opacity: 0.5;
+
+/* BUTTON CHECKOUT */
+/* From Uiverse.io by alexroumi */ 
+.btn-checkout {
+ padding: 15px 25px;
+ border: unset;
+ border-radius: 15px;
+ color: #212121;
+ z-index: 1;
+ background: #8ed208;
+ position: relative;
+ font-weight: 1000;
+ font-size: 17px;
+ -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ transition: all 250ms;
+ overflow: hidden;
+ cursor: pointer;
 }
 
-.cursor-not-allowed {
-    cursor: not-allowed;
+.btn-checkout::before {
+ content: "";
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 100%;
+ width: 0;
+ border-radius: 15px;
+ background-color: #25c742;
+ z-index: -1;
+ -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ transition: all 250ms
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+.btn-checkout:hover {
+ color: #1f1f1f;
 }
 
-.shake {
-    animation: shake 0.5s ease-in-out;
+.btn-checkout:hover::before {
+ width: 100%;
 }

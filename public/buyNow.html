@@ -41,7 +41,7 @@
                     <!-- Tarjeta de crédito -->
                     <div class="payment-method">
                         <input type="radio" id="tarjeta" name="metodo-pago" value="tarjeta" checked>
-                        <label for="tarjeta">Tarjeta de Crédito/Débito</label>
+                        <label for="tarjeta">Tarjeta de Crédito/Débito*</label>
 
                         <div class="card-details mt-3">
                             <!-- From Uiverse.io by Jules-gitclerc -->
@@ -81,10 +81,29 @@
                     <!-- Botones -->
                     <div class="flex gap-4 mt-6">
                         <button type="button" onclick="window.history.back()"
-                            class="bg-gray-300 text-gray-700 px-6 py-2 rounded">
-                            Volver
+                            class="bg-gray-800 text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold border-4 border-white group cursor-pointer">
+                            <div
+                                class="bg-gray-600 rounded-xl h-12 w-1/4 grid place-items-center absolute left-0 top-0 group-hover:w-full z-10 duration-500">
+                                <svg width="25px" height="25px" viewBox="0 0 1024 1024"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="#ffffff" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"></path>
+                                    <path fill="#ffffff"
+                                        d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <p class="translate-x-4 text-white">Volver</p>
                         </button>
-                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                        <button type="submit" class="btn-checkout flex gap-2">
+                            <svg viewBox="0 0 16 16" class="bi bi-cart-check" height="24" width="24"
+                                xmlns="http://www.w3.org/2000/svg" fill="#fff">
+                                <path fill="#000000"
+                                    d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z">
+                                </path>
+                                <path fill="#000000"
+                                    d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z">
+                                </path>
+                            </svg>
                             Pagar ahora
                         </button>
                     </div>
