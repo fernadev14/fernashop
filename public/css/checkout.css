@@ -121,8 +121,64 @@
     font-size: 0.9rem;
 }
 
+/* ESTILOS PARA EL SCROLL EN CHECKOUT */
+
 /* Asegurar que el resumen tenga altura mínima */
 #resumen-compra {
     min-height: 200px;
     position: relative;
+}
+
+/* Contenedor del resumen con scroll */
+.resumen-container {
+    max-height: 400px; /* Altura máxima antes de mostrar scroll */
+    overflow-y: auto; /* Scroll vertical */
+    overflow-x: hidden; /* Evitar scroll horizontal */
+    min-height: 150px; /* Altura mínima */
+    position: relative;
+}
+
+/* Personalizar el scrollbar para que se vea bien */
+.resumen-container::-webkit-scrollbar {
+    width: 6px; /* Ancho del scrollbar */
+}
+
+.resumen-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color del track */
+    border-radius: 3px;
+}
+
+.resumen-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* Color del thumb */
+    border-radius: 3px;
+}
+
+.resumen-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; /* Color al hacer hover */
+}
+
+/* Para Firefox */
+.resumen-container {
+    padding-right: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: #101828 #f1f1f1;
+}
+
+/* Ajustar el espaciado de los productos */
+.resumen-container .flex.justify-between.items-center.py-4.border-b {
+    padding: 1rem 0; /* Reducir padding para mejor espacio */
+    margin: 0; /* Quitar márgenes */
+}
+
+.resumen-container .flex.justify-between.items-center.py-4.border-b:last-child {
+    border-bottom: none; /* Quitar borde del último elemento */
+}
+
+/* Loading dentro del contenedor con scroll */
+.resumen-container .section-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
 }

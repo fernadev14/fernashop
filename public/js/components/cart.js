@@ -249,7 +249,7 @@ export function configurarBotonCheckout() {
             }
             
             // Redirigir a la página de pago
-            window.location.href = 'buyNow.html';
+            window.location.href = 'checkout.html';
         }
     });
 }

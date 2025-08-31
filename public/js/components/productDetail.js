@@ -201,7 +201,7 @@ function configurarEventosProducto(producto) {
     
         // Redirigir a la página de pago
         setTimeout(() => {
-            window.location.href = 'buyNow.html';
+            window.location.href = 'checkout.html';
         }, 100);
     });
 

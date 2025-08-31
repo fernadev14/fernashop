@@ -65,7 +65,7 @@ function renderResumenCompra() {
                 </p>
                 
                 <!-- Eliminar producto -->
-                <button class="eliminar-item text-sm text-red-600 underline mt-2" data-id="${item.id}">
+                <button class="eliminar-item text-sm text-red-600 underline mt-2 cursor-pointer" data-id="${item.id}">
                     Eliminar
                 </button>
             </div>

@@ -24,7 +24,7 @@
             <!-- Resumen del pedido -->
             <div class="bg-white p-6 rounded-lg shadow">
                 <h2 class="text-xl font-semibold mb-4">Resumen de tu compra</h2>
-                <div id="resumen-compra">
+                <div id="resumen-compra" class="resumen-container">
                     <!-- LOADING RESUMEN -->
                     <div id="resumen-loadings" class="section-loading">
                         <div class="loading-spinner"></div>
@@ -51,7 +51,6 @@
                         <label for="tarjeta">Tarjeta de Crédito/Débito*</label>
 
                         <div class="card-details mt-3">
-                            <!-- From Uiverse.io by Jules-gitclerc -->
                             <div
                                 class="flex items-center justify-center bg-gray-800 overflow-hidden p-1 border border-white border-opacity-30 rounded-lg shadow-md h-12">
                                 <input
@@ -80,9 +79,52 @@
                     </div>
 
                     <!-- PSE -->
-                    <div class="payment-method">
+                    <div class="payment-method flex">
                         <input type="radio" id="pse" name="metodo-pago" value="pse">
-                        <label for="pse">PSE (Pagos Seguros en Línea)</label>
+                        <label for="pse" class="flex">
+                            <svg class="w-6 mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img"
+                                aria-label="Logo PSE">
+                                <defs>
+                                    <radialGradient id="g" cx="50%" cy="45%" r="60%">
+                                        <stop offset="0%" stop-color="#2f67b6" />
+                                        <stop offset="60%" stop-color="#164e9f" />
+                                        <stop offset="100%" stop-color="#0f3a82" />
+                                    </radialGradient>
+                                    <clipPath id="c">
+                                        <circle cx="256" cy="256" r="246" />
+                                    </clipPath>
+                                    <style>
+                                        .pse {
+                                            font: 900 200px/1 "Comfortaa", "Nunito", "Quicksand", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+                                            letter-spacing: .02em
+                                        }
+
+                                        .ach {
+                                            font: 600 42px/1 "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+                                            letter-spacing: .04em
+                                        }
+                                    </style>
+                                </defs> <!-- outer circle -->
+                                <circle cx="256" cy="256" r="246" fill="url(#g)" />
+                                <!-- left orange circuit motif (stylized approximation) -->
+                                <g clip-path="url(#c)" transform="translate(-6,0)" fill="#f7a400" stroke="#f7a400"
+                                    stroke-linecap="round" stroke-linejoin="round"> <!-- dots on the rim -->
+                                    <circle cx="26" cy="116" r="9" />
+                                    <circle cx="26" cy="156" r="9" />
+                                    <circle cx="26" cy="196" r="9" />
+                                    <circle cx="26" cy="236" r="9" />
+                                    <circle cx="26" cy="276" r="9" />
+                                    <circle cx="26" cy="316" r="9" /> <!-- circuit lines/chevrons -->
+                                    <path d="M110 246H26" stroke-width="10" fill="none" />
+                                    <path d="M150 226H96l-30-28" stroke-width="10" fill="none" />
+                                    <path d="M150 266H96l-30 28" stroke-width="10" fill="none" />
+                                    <!-- connector node -->
+                                    <circle cx="150" cy="246" r="8" />
+                                </g> <!-- text -->
+                                <g fill="#fff"> <text class="ach" x="180" y="175">ach</text> <text class="pse" x="126"
+                                        y="350">pse</text> </g>
+                            </svg>
+                            (Pagos Seguros en Línea)</label>
                     </div>
 
                     <!-- Botones -->
