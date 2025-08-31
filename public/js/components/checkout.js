@@ -2,6 +2,7 @@ import { mostrarToast } from '../utils/notificaciones.js';
 import { renderNav } from './navBar.js';
 import { renderFooter } from './footer.js';
 import { obtenerProductosFirestore } from '../data/productosFirestore.js';
+import { showResumenLoading, hideResumenLoading } from './loading/loading.js';
 
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let productosFirestore = [];
@@ -25,6 +26,8 @@ function renderResumenCompra() {
     // const totalContainer = document.getElementById('total-compra');
     
     if (!container) return;
+
+    showResumenLoading(); // Mostrar loading durante renderizado
 
     container.innerHTML = carrito.map(item => { 
         const stockDisponible = obtenerStockDisponible(item.id);
@@ -72,6 +75,7 @@ function renderResumenCompra() {
 
     actualizarTotal();
     configurarEventosCantidad();
+    hideResumenLoading(); // Ocultar loading cuando termine
 
     // const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     // totalContainer.textContent = `$${total.toLocaleString('es-CO')}`;
@@ -224,8 +228,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    // MOSTRAR LOADING AL CARGAR LA PÁGINA
+    showResumenLoading();
+
     renderNav('header');
     renderFooter('footer');
+
     
     // Cargar productos para verificar stock
     await cargarProductos();

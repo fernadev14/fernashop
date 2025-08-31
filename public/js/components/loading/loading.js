@@ -14,11 +14,6 @@ export async function init() {
     }
 }
 
-// export function showLoader() {
-//     const loader = document.getElementById("loader");
-//     if (loader) loader.style.display = "flex";
-// }
-
 export function showLoader(estilo = "default") {
     const loader = document.getElementById("loader");
     if (!loader) return;
@@ -57,6 +52,27 @@ export function hideLoader() {
     document.querySelector("main")?.classList.remove("hidden");
     document.querySelector("footer")?.classList.remove("hidden");
 }
+
+// ==================== FUNCIONES DE LOADING POR SECCIÓN ====================
+export function showResumenLoading() {
+    const loading = document.getElementById("resumen-loading");
+    const contenido = document.getElementById("resumen-compra");
+    if (loading) {
+        loading.classList.remove("hidden");
+    }
+    if (contenido) {
+        contenido.style.minHeight = "200px";
+    }
+}
+
+export function hideResumenLoading() {
+    const loading = document.getElementById("resumen-loading");
+    if (loading) {
+        loading.classList.add("hidden");
+    }
+}
+
+// ============================================================================
 
 /*
 export function initLoading() {

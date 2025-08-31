@@ -90,3 +90,39 @@
 .btn-checkout:hover::before {
  width: 100%;
 }
+
+/* LOADING POR SECCIÓN */
+.section-loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    min-height: 150px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #956afa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.section-loading p {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Asegurar que el resumen tenga altura mínima */
+#resumen-compra {
+    min-height: 200px;
+    position: relative;
+}
